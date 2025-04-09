@@ -14,92 +14,91 @@ author: "国内 小组"
 为充分挖掘大数据技术在舆情分析中的应用潜力，现通过分组形式，完成对国内大模型舆情的初步分析，并产出高质量的舆情报告（PDF）及对应的说明文档（Markdown），以考察同学们对舆情分析流程、Markdown 撰写规范、大模型调用实践等方面的掌握程度。
 
 
-# 需求说明
-
-1. **舆情分析报告（PDF）**  
-   - **数量**：2 篇  
-   - **主题**：与国内大模型相关（如阿里通义千问、其他国内大模型等）  
-   - **要求**：主题立意深刻、舆情影响大、报告结构清晰、内容完整。
-
-2. **Markdown 文档（assignment.md）**  
-   - **撰写要求**：逻辑清晰、内容充分、MD 样式规范。
-   - **主要内容**：项目背景、需求说明、研究方法、数据来源、实现过程、核心代码、结果分析、结论与展望等。
-   - **提交格式**：Markdown 文件。
-
 3. **实现思路**  
    - 充分利用大数据爬虫、文本清洗、情感分析、可视化等技术手段；
    - 采用国内大模型（如阿里通义千问 QWQ-32B）进行文本分析或情感倾向判断；
    - 注重结果可视化呈现，便于发现舆情热点与趋势。
 
-# 方法与流程
-
-1. **数据获取**  
-   - 通过爬虫或公开数据集获取与 “国内大模型”、“阿里通义千问”等关键词相关的文本数据。
-   - 可选地，手动收集媒体报道或社区评论，保证数据多样性。
-
-2. **数据预处理**  
-   - 文本清洗：去除HTML标签、特殊字符、Emoji 等。
-   - 中文分词：可使用 `jieba` 或 `hanlp` 等分词工具。
-   - 去除停用词：常见停用词（如 “的”、“是”、“了” 等）。
-
-3. **模型分析**  
-   - 通过阿里通义千问（QWQ-32B）进行情感分类或主题提取（可结合 API 或本地部署）。
-   - 与传统机器学习或其他深度学习模型进行对比。
-
-4. **结果可视化**  
-   - 使用 Python 的 `matplotlib`、`seaborn`、`pyecharts` 等绘制柱状图、词云图、时间序列曲线等。
-
-5. **报告撰写**  
-   - 将分析结果及可视化图表写入 LaTeX 文档中，编译生成 PDF；
-   - 同时整理研究思路、方法及结论，撰写成 Markdown 文档（即本文件）。
-
-# 示例代码
-
-以下展示部分 Python 代码示例，演示如何调用阿里通义千问（QWQ-32B）进行情感分析（注：具体 API 接口与调用方式需参考官方文档或 SDK）：
-
-```python
-```python
-import requests
-import json
-
-# 假设阿里通义千问（QWQ-32B）提供了 RESTful API 方式
-API_URL = "https://api.aliyun.com/qwq-32b/v1/sentiment"
-API_KEY = "YOUR_API_KEY_HERE"
-
-def analyze_sentiment(text):
-    """
-    调用阿里通义千问 QWQ-32B 的情感分析接口
-    text: 待分析的文本
-    返回: 情感分析结果 (正面/中性/负面)
-    """
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {API_KEY}"
-    }
-    payload = {
-        "text": text
-    }
-    response = requests.post(API_URL, headers=headers, data=json.dumps(payload))
-    if response.status_code == 200:
-        result = response.json()
-        return result.get("sentiment", "unknown")
-    else:
-        print("Error:", response.text)
-        return None
-
-if __name__ == "__main__":
-    test_texts = [
-        "我觉得国内大模型技术发展很快，前景非常好！",
-        "对这些大模型的隐私与伦理问题表示担忧。",
-        "不知道阿里通义千问的效果能不能赶上GPT-4。"
-    ]
 
 
+# 研究目标
 
-Markdown
-> **说明：**  
-> - 上述代码仅作演示使用，实际接口地址与参数需参考阿里官方文档。  
-> - 若使用私有化部署的大模型，可省略网络请求，改为本地推理调用。
+- **数据采集：** 从微博、知乎、新闻网站等渠道采集关于“阿里通义千问”和“国内大模型”的讨论数据。
+- **情感分析：** 利用阿里通义千问 QWQ-32B 的情感分析能力，对文本进行正、中、负面情感分类。
+- **数据可视化：** 直观展示数据热度、情感分布和讨论焦点。
+- **报告生成：** 编写符合 LaTeX 格式的舆情报告，并通过自动编译生成 PDF。
+
+# 技术方案
+
+1. **大模型调用**  
+   本项目采用国内先进的阿里通义千问 QWQ-32B。提示词设计为：  
+   > “生成一份关于国内大模型舆情分析的详细报告，包含引言、数据来源、分析方法、数据分析结果、结论与建议等章节，并输出符合 LaTeX 格式要求的完整源码。”  
+   在智能体与提示词的配合下，最终输出了结构清晰、内容详实的 LaTeX 源码（参见下面的 `report.tex`）。
+
+2. **代码实现**
+   - **情感分析示例代码：**  
+     下面的 Python 代码示例演示了如何调用阿里通义千问 QWQ-32B 的情感分析 API，对文本进行情感判断，并与舆情报告的内容相呼应：
+     ```python
+     import requests
+     import json
+
+     # 阿里通义千问 QWQ-32B 情感分析 API 示例（请参考官方文档设置 API_URL 与 API_KEY）
+     API_URL = "https://api.aliyun.com/qwq-32b/v1/sentiment"
+     API_KEY = "YOUR_API_KEY_HERE"
+
+     def analyze_sentiment(text):
+         headers = {
+             "Content-Type": "application/json",
+             "Authorization": f"Bearer {API_KEY}"
+         }
+         payload = {"text": text}
+         response = requests.post(API_URL, headers=headers, data=json.dumps(payload))
+         if response.status_code == 200:
+             result = response.json()
+             return result.get("sentiment", "unknown")
+         else:
+             print("Error:", response.text)
+             return None
+
+     if __name__ == "__main__":
+         test_texts = [
+             "我认为阿里通义千问的技术非常先进，对国内大模型充满期待。",
+             "对于数据隐私和伦理问题表示担忧。",
+             "虽然功能强大，但仍需在商业化和应用落地上进行改进。"
+         ]
+
+         for text in test_texts:
+             sentiment = analyze_sentiment(text)
+             print(f"文本: {text}\n情感分析结果: {sentiment}\n")
+     ```
+
+3. **自动编译及提交方案**  
+   为了确保每次提交都能自动生成最新的 PDF 报告，你可以在 GitHub 仓库中配置 GitHub Actions。示例配置如下：
+   ```yaml
+   name: Build LaTeX Document
+
+   on:
+     push:
+       branches: [ main ]
+     pull_request:
+       branches: [ main ]
+
+   jobs:
+     build:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v2
+         - name: Install TeX Live
+           run: sudo apt-get update && sudo apt-get install -y texlive-full
+         - name: Compile report.tex
+           run: pdflatex report.tex
+         - name: Upload PDF artifact
+           uses: actions/upload-artifact@v2
+           with:
+             name: report-pdf
+             path: report.pdf
+
+
 
 # 结果与讨论
 
